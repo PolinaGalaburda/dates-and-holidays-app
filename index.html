@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-translate="pageTitle">Dates</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="header__logo">
+        <h1 data-translate="pageTitle" class="headline">Dates</h1>
+      </div>
+      <div class="language-select">
+        <select
+          class="language-select__select"
+          id="languageSelect"
+          onchange="changeLanguage(this.value)"
+        >
+          <option
+            class="language-select__option"
+            value="en"
+            data-translate="englishOption"
+          >
+            English
+          </option>
+          <option
+            class="language-select__option"
+            value="uk"
+            data-translate="ukrainianOption"
+          >
+            Українська
+          </option>
+        </select>
+      </div>
+    </header>
+
+    <div class="tabs">
+      <ul class="tabs__list">
+        <li
+          class="tabs__item active"
+          data-translate="tab1"
+          onclick="changeTab(1)"
+        >
+          Calculate time interval
+        </li>
+        <li
+          class="tabs__item tabs__item_border"
+          data-translate="tab2"
+          onclick="changeTab(2)"
+        >
+          Holidays list
+        </li>
+      </ul>
+    </div>
+
+    <div class="tabs-content">
+      <div class="tabs-content__tab active">
+        <div class="tabs-content__tab1-left">
+          <form class="tabs-content__date-form">
+            <div class="tabs-content__preset">
+              <p class="tabs-content__headline" data-translate="presetsLabel">
+                Presets
+              </p>
+              <div class="tabs-content__choice" id="preset">
+                <input
+                  type="radio"
+                  class="tabs-content__radio-input"
+                  name="preset"
+                  id="preset-0"
+                  value="0"
+                  checked
+                />
+                <label for="preset-0" class="tabs-content__radio-label"
+                  >-</label
+                >
+
+                <input
+                  type="radio"
+                  class="tabs-content__radio-input"
+                  name="preset"
+                  id="preset-7"
+                  value="7"
+                />
+                <label
+                  for="preset-7"
+                  class="tabs-content__radio-label"
+                  data-translate="weekPreset"
+                  >Week (7 days)</label
+                >
+
+                <input
+                  type="radio"
+                  class="tabs-content__radio-input"
+                  name="preset"
+                  id="preset-30"
+                  value="30"
+                />
+                <label
+                  for="preset-30"
+                  class="tabs-content__radio-label"
+                  data-translate="monthPreset"
+                  >Month (30 days)</label
+                >
+              </div>
+            </div>
+            <div class="tabs-content__date-range">
+              <p class="tabs-content__headline" data-translate="dateRange">
+                Date range
+              </p>
+              <div class="tabs-content__date">
+                <input
+                  class="tabs-content__input tabs-content__input_border"
+                  type="date"
+                  id="startDate"
+                  required
+                />
+                <input
+                  class="tabs-content__input tabs-content__input_border"
+                  type="date"
+                  id="endDate"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="tabs-content__options">
+              <p class="tabs-content__headline" data-translate="optionsLabel">
+                Options
+              </p>
+              <div class="tabs-content__choice" id="options">
+                <input
+                  type="radio"
+                  class="tabs-content__radio-input"
+                  name="options"
+                  id="all"
+                  value="all"
+                  checked
+                />
+                <label
+                  for="all"
+                  class="tabs-content__radio-label"
+                  data-translate="allOption"
+                  >All days</label
+                >
+
+                <input
+                  type="radio"
+                  class="tabs-content__radio-input"
+                  name="options"
+                  id="weekdays"
+                  value="Weekdays"
+                />
+                <label
+                  for="weekdays"
+                  class="tabs-content__radio-label"
+                  data-translate="weekdaysOption"
+                  >Weekdays</label
+                >
+
+                <input
+                  type="radio"
+                  class="tabs-content__radio-input"
+                  name="options"
+                  id="weekends"
+                  value="Weekends"
+                />
+                <label
+                  for="weekends"
+                  class="tabs-content__radio-label"
+                  data-translate="weekendsOption"
+                  >Weekends</label
+                >
+              </div>
+            </div>
+            <div class="tabs-content__result-type">
+              <p
+                class="tabs-content__headline"
+                data-translate="resultTypeLabel"
+              >
+                Result type
+              </p>
+              <div class="tabs-content__choice" id="resultType">
+                <input
+                  type="radio"
+                  class="tabs-content__radio-input"
+                  name="result-type"
+                  id="days"
+                  value="days"
+                  checked
+                />
+                <label
+                  for="days"
+                  class="tabs-content__radio-label"
+                  data-translate="daysResultType"
+                  >Days</label
+                >
+
+                <input
+                  type="radio"
+                  class="tabs-content__radio-input"
+                  name="result-type"
+                  id="hours"
+                  value="hours"
+                />
+                <label
+                  for="hours"
+                  class="tabs-content__radio-label"
+                  data-translate="hoursResultType"
+                  >Hours</label
+                >
+
+                <input
+                  type="radio"
+                  class="tabs-content__radio-input"
+                  name="result-type"
+                  id="minutes"
+                  value="minutes"
+                />
+                <label
+                  for="minutes"
+                  class="tabs-content__radio-label"
+                  data-translate="minutesResultType"
+                  >Minutes</label
+                >
+                <input
+                  type="radio"
+                  class="tabs-content__radio-input"
+                  name="result-type"
+                  id="seconds"
+                  value="seconds"
+                />
+                <label
+                  for="seconds"
+                  class="tabs-content__radio-label"
+                  data-translate="secondsResultType"
+                  >Seconds</label
+                >
+              </div>
+            </div>
+            <button
+              class="tabs-content__btn"
+              type="submit"
+              data-translate="calculateBtn"
+            >
+              Calculate
+            </button>
+            <div class="tabs-content__result-block1" id="result1"></div>
+          </form>
+        </div>
+
+        <div class="tabs-content__tab1-right">
+          <div class="tabs-content__history-block">
+            <p
+              class="tabs-content__history-headline"
+              data-translate="historyTitle"
+            >
+              History
+            </p>
+            <table class="tabs-content__table" id="historyTable">
+              <thead class="tabs-content__table-head">
+                <tr class="tabs-content__table-row">
+                  <th
+                    class="tabs-content__header tabs-content__header_date"
+                    data-translate="dateRange"
+                  >
+                    Date range
+                  </th>
+                  <th
+                    class="tabs-content__header tabs-content__header_result"
+                    data-translate="historyResult"
+                  >
+                    Result
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="tabs-content__table-body">
+                <!-- Тут буде відображатись історія запитів -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="tabs-content__tab tabs-content__tab_width1200">
+        <div class="tabs-content__tab2-left">
+          <form class="tabs-content__holidays-form" id="holidays-form">
+            <div class="tabs-content__country-year">
+              <select class="tabs-content__select" id="country" required>
+                <option
+                  value="select-country"
+                  selected
+                  data-translate="countryLabel"
+                >
+                  Select country
+                </option>
+                <!-- тут буде відображатись список країн -->
+              </select>
+              <select class="tabs-content__select" id="year" required>
+                <!-- тут буде відображатись список років -->
+              </select>
+            </div>
+            <button
+              class="tabs-content__btn"
+              type="submit"
+              data-translate="getHolidaysBtn"
+            >
+              Get holidays
+            </button>
+          </form>
+        </div>
+
+        <div class="tabs-content__tab2-right">
+          <div class="tabs-content__result-block2" id="result2"></div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
