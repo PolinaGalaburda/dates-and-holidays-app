@@ -25,10 +25,10 @@ const translations = {
     timeIntervalTitle: "Time interval",
     historyTitle: "History",
     historyResult: "Result",
-    days: "days",
-    hours: "hours",
-    minutes: "minutes",
-    seconds: "seconds",
+    day: ["day", "days"],
+    hour: ["hour", "hours"],
+    minute: ["minute", "minutes"],
+    second: ["second", "seconds"],
     errorEndDateEarlier: "End date cannot be earlier than start date.",
     countryLabel: "Select country",
     getHolidaysBtn: "Get holidays",
@@ -38,8 +38,8 @@ const translations = {
       "Error while fetching holidays data. Please try again later.",
     noData: "No data available for the selected country and year.",
     fetchError: "Error fetching holidays.",
-    date: "Date",
-    holiday: "Holiday",
+    dateTitle: "Date",
+    holidayTitle: "Holiday",
   },
   uk: {
     pageTitle: "Дати",
@@ -64,10 +64,10 @@ const translations = {
     timeIntervalTitle: "Інтервал часу",
     historyTitle: "Історія",
     historyResult: "Результат",
-    days: "днів",
-    hours: "годин",
-    minutes: "хвилин",
-    seconds: "секунд",
+    day: ["день", "дні", "днів"],
+    hour: ["година", "години", "годин"],
+    minute: ["хвилина", "хвилини", "хвилин"], // Додано хвилини для української
+    second: ["секунда", "секунди", "секунд"],
     errorEndDateEarlier: "Кінцева дата не може бути раніше початкової.",
     countryLabel: "Оберіть країну",
     getHolidaysBtn: "Отримати свята",
@@ -77,13 +77,18 @@ const translations = {
       "Помилка під час отримання даних про свята. Будь ласка, спробуйте пізніше.",
     noData: "Немає даних про свята для обраної країни та року.",
     fetchError: "Помилка під час отримання свят.",
-    date: "Дата",
-    holiday: "Свято",
+    dateTitle: "Дата",
+    holidayTitle: "Свято",
   },
 };
 
 // Встановлення мови за замовчуванням (англійська)
 let currentLang = "en";
+
+window.onload = function () {
+  changeLanguage("en");
+  document.getElementById("languageSelect").value = "en";
+};
 
 // Функція для зміни мови
 function changeLanguage(lang) {
@@ -169,6 +174,35 @@ const resultBlock1 = document.getElementById("result1");
 const historyTable = document.getElementById("historyTable");
 const presets = document.getElementsByName("preset");
 
+function getLocalizedUnit(value, unitsArray) {
+  if (currentLang === "uk") {
+    const lastDigit = value % 10;
+
+    if (value === 1) {
+      return unitsArray[0];
+    } else if (value % 100 === 11) {
+      return unitsArray[2]; // особливий випадок для числа 11
+    } else if (lastDigit === 1) {
+      return unitsArray[0];
+    } else if (lastDigit > 1 && lastDigit < 5) {
+      return unitsArray[1];
+    } else {
+      return unitsArray[2];
+    }
+  } else {
+    return value === 1 ? unitsArray[0] : unitsArray[1];
+  }
+}
+function handleDateChange() {
+  const startDate = new Date(startDateInput.value);
+  const endDate = new Date(endDateInput.value);
+  const daysDiff = (endDate - startDate) / (1000 * 60 * 60 * 24);
+
+  if (daysDiff !== 7 && daysDiff !== 30) {
+    document.getElementById("preset-0").checked = true;
+  }
+}
+
 // Функція для розрахунку інтервалу часу
 function calculateTimeInterval(event) {
   event.preventDefault();
@@ -224,18 +258,41 @@ function calculateTimeInterval(event) {
     timeInterval *= 24 * 60 * 60;
   }
 
-  const localizedResultType =
-    translations[currentLang][resultTypeValue] || resultTypeValue;
+  let localizedResult;
+  if (resultTypeValue === "days") {
+    localizedResult = getLocalizedUnit(
+      Math.floor(timeInterval),
+      translations[currentLang].day
+    );
+  } else if (resultTypeValue === "hours") {
+    localizedResult = getLocalizedUnit(
+      Math.floor(timeInterval),
+      translations[currentLang].hour
+    );
+  } else if (resultTypeValue === "minutes") {
+    localizedResult = getLocalizedUnit(
+      Math.floor(timeInterval),
+      translations[currentLang].minute
+    );
+  } else if (resultTypeValue === "seconds") {
+    localizedResult = getLocalizedUnit(
+      Math.floor(timeInterval),
+      translations[currentLang].second
+    );
+  }
   // Виведення результату
   resultBlock1.innerHTML = `<p>${
     translations[currentLang]["timeIntervalTitle"]
-  }: ${Math.floor(timeInterval)} ${localizedResultType}</p>`;
+  }: ${Math.floor(timeInterval)} ${localizedResult}</p>`;
+
+  startDateInput.addEventListener("change", handleDateChange);
+  endDateInput.addEventListener("change", handleDateChange);
 
   // Оновлення історії
   const historyRow = document.createElement("tr");
   historyRow.innerHTML = `<td>${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}</td><td>${Math.floor(
     timeInterval
-  )} ${localizedResultType}</td>`;
+  )} ${localizedResult}</td>`;
 
   if (historyTable.rows.length >= 10) {
     historyTable.deleteRow(1);
@@ -399,10 +456,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Додаємо текст і іконку до заголовка "дата"
-    dateHeader.textContent = translations[currentLang].date + " ";
+    dateHeader.textContent = translations[currentLang].dateTitle + " ";
     dateHeader.appendChild(dateIcon);
 
-    nameHeader.textContent = translations[currentLang].holiday;
+    nameHeader.textContent = translations[currentLang].holidayTitle;
 
     dateHeader.addEventListener("click", function () {
       sortHolidaysByDate(holidays);
